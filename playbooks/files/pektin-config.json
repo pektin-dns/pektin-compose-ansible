@@ -1,0 +1,22 @@
+{
+    "domain": "example.com",
+    "uiSubDomain": "ui.pektin",
+    "apiSubDomain": "api.pektin",
+    "vaultSubDomain": "vault.pektin",
+
+    "enableUi": true,
+    "enableApi": true,
+
+    "enableRotate": true,
+    "enableAutoCertificates": true,
+    "letsencryptEmail": "letsencrypt@example.com",
+
+    "autoConfigureMainDomain": true,
+
+    "proxyConfig": "none",
+    "createProxy": false,
+
+    "buildFromSource": false,
+    "dev": "insecure-online",
+    "insecureDevIp": "65.108.88.212"
+}

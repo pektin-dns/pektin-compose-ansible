@@ -1,0 +1,49 @@
+- name: install docker
+  vars_files:
+      - ../environment.yml
+  hosts: hcloud_labels_group_control_plane
+  remote_user: root
+  tasks:
+      - name: copy files
+        copy:
+            src: ../files/
+            dest: ~/files/
+      - name: install docker deps
+        apt:
+            state: present
+            autoclean: true
+            autoremove: true
+            update_cache: true
+            pkg:
+                - apt-transport-https
+                - ca-certificates
+                - curl
+                - gnupg
+                - lsb-release
+      - name: install and start docker
+        block:
+            - name: add docker gpg key
+              apt_key:
+                  url: https://download.docker.com/linux/ubuntu/gpg
+                  state: present
+            - name: add docker apt repository
+              apt_repository:
+                  repo: deb https://download.docker.com/linux/ubuntu {{ansible_facts['lsb']['codename']}} stable
+                  state: present
+            - name: install docker
+              apt:
+                  state: present
+                  pkg:
+                      - docker-ce
+                      - docker-ce-cli
+                      - containerd.io
+            - name: start and enable docker service
+              service:
+                  name: docker
+                  state: started
+                  enabled: true
+            - name: install docker compose
+              get_url:
+                  url: https://github.com/docker/compose/releases/download/1.29.2/docker-compose-{{ansible_facts['system']}}-{{ansible_facts['userspace_architecture']}}
+                  dest: /usr/local/bin/docker-compose
+                  mode: +x

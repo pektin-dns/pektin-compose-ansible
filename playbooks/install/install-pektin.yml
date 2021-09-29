@@ -1,0 +1,17 @@
+- name: install pektin
+  vars_files:
+      - ../environment.yml
+  hosts: hcloud_labels_group_control_plane
+  remote_user: root
+  tasks:
+      - name: copy files
+        copy:
+            src: ../files/
+            dest: ~/files/
+      - name: clone pektin
+        git:
+            repo: https://git.y.gy/pektin/pektin-compose
+            dest: ~/pektin-compose
+            single_branch: yes
+      - name: copy dev file with other ports
+        shell: cp ~/files/pektin-config.json ~/pektin-compose/

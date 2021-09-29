@@ -1,0 +1,18 @@
+- name: run pektin
+  vars_files:
+      - ../environment.yml
+  hosts: hcloud_labels_group_control_plane
+  remote_user: root
+  tasks:
+      - name: copy files
+        copy:
+            src: ../files/
+            dest: ~/files/
+      - name: stop systemd-resolved
+        shell: systemctl disable --now systemd-resolved
+      - name: insert nameserver
+        shell: echo 'nameserver 1.1.1.1' > /etc/resolv.conf
+      - name: install pektin
+        shell: cd pektin-compose/ && bash install.sh
+      - name: run pektin
+        shell: cd pektin-compose/ && bash start.sh

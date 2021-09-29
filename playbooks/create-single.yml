@@ -1,0 +1,22 @@
+- name: create a server
+  hcloud_server:
+      api_token: "{{ token }}"
+      name: "{{item.key}}"
+      server_type: "{{item.value.server_type}}"
+      image: ubuntu-20.04
+      labels:
+          project: "{{PROJECT_NAME}}"
+          group: "{{item.value.group}}"
+      #location: nbg1
+      ssh_keys:
+          - "{{KEY_NAME}}"
+      state: present
+
+- name: create a volume
+  when: item.value.volume_size != 0
+  hcloud_volume:
+      api_token: "{{ token }}"
+      name: "{{item.key}}_v1"
+      size: "{{ item.value.volume_size }}"
+      state: present
+      server: "{{item.key}}"

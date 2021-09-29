@@ -1,0 +1,29 @@
+- name: install certbot with pip
+  vars_files:
+      - ../environment.yml
+  hosts: hcloud_labels_group_control_plane
+  remote_user: root
+  tasks:
+      - name: copy files
+        copy:
+            src: ../../../certbot-dns-pektin/
+            dest: ~/certbot-dns-pektin/
+      - name: copy files
+        copy:
+            src: ../files/
+            dest: ~/files/
+      - name: install pip
+        apt:
+            state: present
+            autoclean: true
+            autoremove: true
+            update_cache: true
+            pkg:
+                - python3-pip
+                - python3-venv
+      - name: create venv
+        shell: python3 -m venv venv
+      - name: install certbot in venv
+        shell: . venv/bin/activate && python3 -m pip install certbot || true
+      - name: install certbot plugin in venv
+        shell: . venv/bin/activate && python3 -m pip install -e ~/certbot-dns-pektin/
