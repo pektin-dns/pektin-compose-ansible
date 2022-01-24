@@ -4,8 +4,6 @@
       - environment.yml
       - hcloud.yml
   tasks:
-      #- name: generate join token
-      #  shell: tr -dc A-Za-z0-9 </dev/urandom | head -c 32 > jointoken
       - name: add personal ssh key
         hcloud_ssh_key:
             api_token: "{{ token }}"

@@ -7,11 +7,10 @@
       labels:
           project: "{{PROJECT_NAME}}"
           group: "{{item.value.group}}"
-      #location: nbg1
+      location: nbg1
       ssh_keys:
           - "{{KEY_NAME}}"
       state: present
-
 - name: create a volume
   when: item.value.volume_size != 0
   hcloud_volume:
@@ -20,3 +19,29 @@
       size: "{{ item.value.volume_size }}"
       state: present
       server: "{{item.key}}"
+- name: create a floating ip
+  when: item.value.ips.type == "ipv6"
+  hcloud_floating_ip:
+      api_token: "{{ token }}"
+      name: "{{item.key}}"
+      type: ipv6
+      state: present
+      server: "{{item.key}}"
+  register: ipv6_result
+- name: create a floating ip
+  when: item.value.ips.type == "ipv4"
+  hcloud_floating_ip:
+      api_token: "{{ token }}"
+      name: "{{item.key}}"
+      type: ipv4
+      state: present
+      server: "{{item.key}}"
+  register: ipv4_result
+- local_action:
+      module: copy
+      content: "{{ ipv6_result }}"
+      dest: "./files/{{item.key}}-ipv6.json"
+- local_action:
+      module: copy
+      content: "{{ ipv4_result }}"
+      dest: "./files/{{item.key}}-ipv4.json"

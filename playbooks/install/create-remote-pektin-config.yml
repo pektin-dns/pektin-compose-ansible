@@ -1,0 +1,9 @@
+- name: create pektin compose config
+  vars_files:
+      - ../environment.yml
+  hosts: hcloud_labels_group_main
+  remote_user: root
+  tasks:
+      - name: Print all available facts
+        ansible.builtin.debug:
+            var: ipv6_result

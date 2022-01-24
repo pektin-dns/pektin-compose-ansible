@@ -1,7 +1,8 @@
 - name: install docker
   vars_files:
       - ../environment.yml
-  hosts: hcloud_labels_group_control_plane
+  hosts:
+      - hcloud_labels_group_main
   remote_user: root
   tasks:
       - name: copy files

@@ -1,7 +1,7 @@
 - name: run pektin
   vars_files:
       - ../environment.yml
-  hosts: hcloud_labels_group_control_plane
+  hosts: hcloud_labels_group_main
   remote_user: root
   tasks:
       - name: copy files
@@ -13,6 +13,6 @@
       - name: insert nameserver
         shell: echo 'nameserver 1.1.1.1' > /etc/resolv.conf
       - name: install pektin
-        shell: cd pektin-compose/ && bash install.sh
+        shell: cd ~/pektin-compose/ && bash install.sh
       - name: run pektin
-        shell: cd pektin-compose/ && bash start.sh
+        shell: cd ~/pektin-compose/ && bash start.sh
