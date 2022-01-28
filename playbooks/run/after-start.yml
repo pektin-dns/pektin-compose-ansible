@@ -1,0 +1,18 @@
+- name: run pektin
+  vars_files:
+      - ../environment.yml
+  hosts: hcloud_labels_group_main
+  remote_user: root
+  tasks:
+      - name: copy back floating ip scripts
+        synchronize:
+            mode: pull
+            src: ~/pektin-compose/ansible/.tmp/floating-ips/configure-scripts/
+            dest: ../../.tmp/floating-ips/configure-scripts/
+      - name: copy arbeiter config
+        synchronize:
+            mode: pull
+            src: ~/pektin-compose/arbeiter/
+            dest: ../../.tmp/arbeiter/
+      - name: run configure floating ips script
+        shell: "bash ~/pektin-compose/ansible/.tmp/floating-ips/configure-scripts/{{ansible_facts['hostname']}}-configure-floating-ips.sh"

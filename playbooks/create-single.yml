@@ -27,6 +27,9 @@
       type: ipv6
       state: present
       server: "{{item.key}}"
+      labels:
+          project: "{{PROJECT_NAME}}"
+          group: "{{item.value.group}}"
   register: ipv6_result
 - name: create a floating ip
   when: item.value.ips.type == "ipv4"
@@ -36,12 +39,15 @@
       type: ipv4
       state: present
       server: "{{item.key}}"
+      labels:
+          project: "{{PROJECT_NAME}}"
+          group: "{{item.value.group}}"
   register: ipv4_result
 - local_action:
       module: copy
       content: "{{ ipv6_result }}"
-      dest: "./files/{{item.key}}-ipv6.json"
+      dest: "../.tmp/floating-ips/res/{{item.key}}--ip.json"
 - local_action:
       module: copy
       content: "{{ ipv4_result }}"
-      dest: "./files/{{item.key}}-ipv4.json"
+      dest: "../.tmp/floating-ips/res/{{item.key}}--legacyIp.json"

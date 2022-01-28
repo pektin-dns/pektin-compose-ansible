@@ -4,14 +4,6 @@
   hosts: hcloud_labels_group_main
   remote_user: root
   tasks:
-      - name: copy files
-        copy:
-            src: ../../../certbot-dns-pektin/
-            dest: ~/certbot-dns-pektin/
-      - name: copy files
-        copy:
-            src: ../files/
-            dest: ~/files/
       - name: install pip
         apt:
             state: present

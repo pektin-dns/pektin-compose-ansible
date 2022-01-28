@@ -4,16 +4,29 @@
   hosts: hcloud_labels_group_main
   remote_user: root
   tasks:
-      - name: copy files
-        copy:
-            src: ../files/
-            dest: ~/files/
+      - name: run delete script
+        shell: bash ~/pektin-compose/reset.sh || true
+      - name: delete old files
+        shell: rm -rf ~/pektin-compose/ || true
       - name: clone pektin
         git:
             repo: https://git.y.gy/pektin/pektin-compose
-            dest: ~/pektin-compose
+            dest: ~/pektin-compose/
+            force: true
             single_branch: yes
+      - name: stop systemd-resolved
+        shell: systemctl disable --now systemd-resolved
+      - name: insert nameserver
+        shell: echo 'nameserver 1.1.1.1' > /etc/resolv.conf
       - name: copy pektin-config
         copy:
-            src: ../../pektin-config.yml
-            dest: ~/files/
+            src: ../../pektin-config.json
+            dest: ~/pektin-compose/
+      - name: copy files to compose ansible folder
+        copy:
+            src: ../../.tmp/
+            dest: ~/pektin-compose/ansible/.tmp/
+      - name: copy hcloud specific index.js
+        copy:
+            src: ../files/index.js
+            dest: ~/pektin-compose/scripts/check-config/

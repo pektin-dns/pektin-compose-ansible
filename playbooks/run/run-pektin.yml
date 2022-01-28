@@ -4,15 +4,9 @@
   hosts: hcloud_labels_group_main
   remote_user: root
   tasks:
-      - name: copy files
-        copy:
-            src: ../files/
-            dest: ~/files/
-      - name: stop systemd-resolved
-        shell: systemctl disable --now systemd-resolved
-      - name: insert nameserver
-        shell: echo 'nameserver 1.1.1.1' > /etc/resolv.conf
-      - name: install pektin
-        shell: cd ~/pektin-compose/ && bash install.sh
+      - name: delete old floating ip if exists
+        shell: rm /etc/netplan/60-floating-ip.yaml ; netplan apply
+      - name: setup pektin
+        shell: cd ~/pektin-compose/ && bash setup.sh delete-old
       - name: run pektin
         shell: cd ~/pektin-compose/ && bash start.sh

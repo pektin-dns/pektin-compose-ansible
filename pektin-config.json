@@ -21,8 +21,17 @@
     },
     "nodes": [],
     "nameservers": [
-        { "subDomain": "ns1", "domain": "pektin.xyz", "node": "balduin", "main": true },
-        { "subDomain": "ns2", "domain": "pektin.xyz", "node": "gustav-gans" }
+        {
+            "subDomain": "ns1",
+            "domain": "pektin.xyz",
+            "node": "pektin",
+            "main": true
+        },
+        {
+            "subDomain": "ns2",
+            "domain": "pektin.xyz",
+            "node": "pektin2"
+        }
     ],
     "certificates": {
         "enabled": true,
@@ -50,7 +59,7 @@
         }
     },
     "devmode": {
-        "enabled": true,
+        "enabled": false,
         "type": "local"
     }
 }
