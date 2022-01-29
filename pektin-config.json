@@ -19,7 +19,6 @@
         "domain": "pektin.xyz",
         "subDomain": "recursor-pektin"
     },
-    "nodes": [],
     "nameservers": [
         {
             "subDomain": "ns1",
@@ -31,6 +30,21 @@
             "subDomain": "ns2",
             "domain": "pektin.xyz",
             "node": "pektin2"
+        }
+    ],
+    "nodes": [
+        {
+            "name": "pektin",
+            "main": true,
+            "ansible": {
+                "configType": "hetzner"
+            }
+        },
+        {
+            "name": "pektin2",
+            "ansible": {
+                "configType": "hetzner"
+            }
         }
     ],
     "certificates": {
@@ -61,5 +75,8 @@
     "devmode": {
         "enabled": false,
         "type": "local"
+    },
+    "ansible": {
+        "sshPubKeyName": "paul@blackbox"
     }
 }

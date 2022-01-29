@@ -1,53 +1,48 @@
 - name: create a server
+  register: server_result
   hcloud_server:
       api_token: "{{ token }}"
-      name: "{{item.key}}"
-      server_type: "{{item.value.server_type}}"
+      name: "{{ item.name }}"
+      server_type: "{{ item.ansible.serverType | default('cx11') }}"
       image: ubuntu-20.04
       labels:
-          project: "{{PROJECT_NAME}}"
-          group: "{{item.value.group}}"
-      location: nbg1
+          project: "pektin"
+          group: "{{ 'main' if item.main is defined and item.main==true else 'sub' }}"
+      location: "{{ item.ansible.location | default('nbg1') }}"
       ssh_keys:
-          - "{{KEY_NAME}}"
+          - "pektin"
+          - "{{ pektin_config.ansible.sshPubKeyName }}"
       state: present
-- name: create a volume
-  when: item.value.volume_size != 0
-  hcloud_volume:
-      api_token: "{{ token }}"
-      name: "{{item.key}}_v1"
-      size: "{{ item.value.volume_size }}"
-      state: present
-      server: "{{item.key}}"
+
 - name: create a floating ip
-  when: item.value.ips.type == "ipv6"
+  register: ipv6_result
+  when: item.ansible.floatingIp is defined and item.ansible.floatingIp == true
   hcloud_floating_ip:
       api_token: "{{ token }}"
-      name: "{{item.key}}"
+      name: "{{ item.name }}"
       type: ipv6
       state: present
-      server: "{{item.key}}"
-      labels:
-          project: "{{PROJECT_NAME}}"
-          group: "{{item.value.group}}"
-  register: ipv6_result
+      server: "{{ item.name }}"
+
 - name: create a floating ip
-  when: item.value.ips.type == "ipv4"
+  register: ipv4_result
+  when: item.ansible.floatingIp is defined and item.ansible.floatingLegacyIp == true
   hcloud_floating_ip:
       api_token: "{{ token }}"
-      name: "{{item.key}}"
+      name: "{{ item.name }}"
       type: ipv4
       state: present
-      server: "{{item.key}}"
-      labels:
-          project: "{{PROJECT_NAME}}"
-          group: "{{item.value.group}}"
-  register: ipv4_result
+      server: "{{ item.name }}"
+
 - local_action:
       module: copy
       content: "{{ ipv6_result }}"
-      dest: "../.tmp/floating-ips/res/{{item.key}}--ip.json"
+      dest: "../.tmp/floating-ips/res/{{ item.name }}--ip.json"
 - local_action:
       module: copy
       content: "{{ ipv4_result }}"
-      dest: "../.tmp/floating-ips/res/{{item.key}}--legacyIp.json"
+      dest: "../.tmp/floating-ips/res/{{ item.name }}--legacyIp.json"
+- local_action:
+      module: copy
+      content: "{{ server_result }}"
+      dest: "../.tmp/servers/res/{{ item.name }}--server.json"

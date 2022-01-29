@@ -1,8 +1,8 @@
 - name: install and run arbeiter
-  vars_files:
-      - ../environment.yml
   hosts: hcloud_labels_group_sub
   remote_user: root
+  vars:
+      ansible_ssh_private_key_file: /ansible/keys/pektin
   tasks:
       - name: copy floating ip script to remote machine
         copy:
@@ -13,7 +13,9 @@
       - name: run delete script
         shell: bash ~/pektin-compose/reset.sh || true
       - name: delete old files
-        shell: rm -rf ~/pektin-compose/ || true
+        file:
+            path: ~/pektin-compose/
+            state: absent
       - name: copy arbeiter script
         copy:
             src: "../../.tmp/arbeiter/{{ansible_facts['hostname']}}.sh"

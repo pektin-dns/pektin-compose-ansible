@@ -1,11 +1,15 @@
 - name: run pektin
-  vars_files:
-      - ../environment.yml
   hosts: hcloud_labels_group_main
   remote_user: root
+  vars:
+      ansible_ssh_private_key_file: /ansible/keys/pektin
   tasks:
       - name: delete old floating ip if exists
-        shell: rm /etc/netplan/60-floating-ip.yaml ; netplan apply
+        file:
+            path: /etc/netplan/60-floating-ip.yaml
+            state: absent
+      - name: apply netplan
+        shell: netplan apply
       - name: setup pektin
         shell: cd ~/pektin-compose/ && bash setup.sh delete-old
       - name: run pektin

@@ -1,19 +1,20 @@
 - name: install pektin
-  vars_files:
-      - ../environment.yml
   hosts: hcloud_labels_group_main
   remote_user: root
+  vars:
+      ansible_ssh_private_key_file: /ansible/keys/pektin
   tasks:
       - name: run delete script
         shell: bash ~/pektin-compose/reset.sh || true
       - name: delete old files
-        shell: rm -rf ~/pektin-compose/ || true
+        file:
+            path: ~/pektin-compose/
+            state: absent
       - name: clone pektin
         git:
             repo: https://git.y.gy/pektin/pektin-compose
             dest: ~/pektin-compose/
             force: true
-            single_branch: yes
       - name: stop systemd-resolved
         shell: systemctl disable --now systemd-resolved
       - name: insert nameserver

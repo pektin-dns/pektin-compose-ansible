@@ -1,16 +1,22 @@
 - name: Create hetzner server
   hosts: localhost
   vars_files:
-      - environment.yml
       - hcloud.yml
+  vars:
+      pektin_config: "{{ lookup('file','/ansible/pektin-config.json') | from_json }}"
   tasks:
       - name: add personal ssh key
         hcloud_ssh_key:
             api_token: "{{ token }}"
-            name: "{{KEY_NAME}}"
-            public_key: "{{lookup('file', '{{LOCAL_KEYFILE}}')}}"
+            name: "pektin"
+            public_key: "{{ lookup('file', '/ansible/keys/pektin.pub') }}"
+      - name: add pektin install ssh key
+        hcloud_ssh_key:
+            api_token: "{{ token }}"
+            name: "{{ pektin_config.ansible.sshPubKeyName }}"
+            public_key: "{{ lookup('file', '/root/personal.pub') }}"
       - name: create nodes
         include: create-single.yml
-        loop: "{{nodes | dict2items}}"
+        loop: "{{ pektin_config.nodes }}"
         loop_control:
             index_var: i
