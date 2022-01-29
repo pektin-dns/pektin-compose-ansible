@@ -37,12 +37,12 @@
 - local_action:
       module: copy
       content: "{{ ipv6_result }}"
-      dest: "../.tmp/floating-ips/res/{{ item.name }}--ip.json"
+      dest: "../.tmp/floating-ips/res/{{ item.name }}-ip.json"
 - local_action:
       module: copy
       content: "{{ ipv4_result }}"
-      dest: "../.tmp/floating-ips/res/{{ item.name }}--legacyIp.json"
+      dest: "../.tmp/floating-ips/res/{{ item.name }}-legacyIp.json"
 - local_action:
       module: copy
       content: "{{ server_result }}"
-      dest: "../.tmp/servers/res/{{ item.name }}--server.json"
+      dest: "../.tmp/servers/res/{{ item.name }}-server.json"
