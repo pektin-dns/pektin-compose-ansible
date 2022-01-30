@@ -1,4 +1,5 @@
 #!/bin/sh
+
 sh create-dirs.sh
 sh run.sh playbooks/create.yml || exit 1
 sleep 10

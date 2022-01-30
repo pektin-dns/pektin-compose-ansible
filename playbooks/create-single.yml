@@ -24,7 +24,7 @@
       state: present
       server: "{{ item.name }}"
 
-- name: create a floating ip
+- name: create a floating legacy ip
   register: ipv4_result
   when: item.ansible.floatingIp is defined and item.ansible.floatingLegacyIp == true
   hcloud_floating_ip:
