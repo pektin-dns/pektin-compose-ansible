@@ -13,7 +13,7 @@
       - name: run configure floating ips script
         shell: "bash ~/{{ansible_facts['hostname']}}-configure-floating-ips.sh"
       - name: run delete script
-        shell: bash ~/pektin-compose/reset.sh || true
+        shell: cd ~/pektin-compose/ && bash reset.sh || true
       - name: delete old files
         file:
             path: ~/pektin-compose/
@@ -24,3 +24,5 @@
             dest: ~/
       - name: run arbeiter script
         shell: "bash ~/{{ansible_facts['hostname']}}.sh"
+      - name: chmod the arbeiter and floating ip files
+        shell: "find ~/pektin-compose/secrets/ -type f -exec chmod 0600 {} \\; && find ~/pektin-compose/secrets/ -type d -exec chmod 0700 {} \\;"

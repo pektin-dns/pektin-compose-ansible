@@ -1,63 +1,70 @@
 {
-    "ui": {
-        "enabled": true,
-        "domain": "pektin.xyz",
-        "subDomain": "ui-pektin"
-    },
-    "api": {
-        "enabled": true,
-        "domain": "pektin.xyz",
-        "subDomain": "api-pektin"
-    },
-    "vault": {
-        "enabled": true,
-        "domain": "pektin.xyz",
-        "subDomain": "vault-pektin"
-    },
-    "recursor": {
-        "enabled": true,
-        "domain": "pektin.xyz",
-        "subDomain": "recursor-pektin"
-    },
-    "nameservers": [
-        {
-            "subDomain": "ns1",
-            "domain": "pektin.xyz",
-            "node": "pektin",
-            "main": true
+    "services": {
+        "ui": {
+            "enabled": true,
+            "domain": "pektin.club",
+            "subDomain": "ui"
         },
-        {
-            "subDomain": "ns2",
-            "domain": "pektin.xyz",
-            "node": "pektin2"
+        "api": {
+            "domain": "pektin.club",
+            "subDomain": "api"
+        },
+        "vault": {
+            "domain": "pektin.club",
+            "subDomain": "vault"
+        },
+        "recursor": {
+            "enabled": true,
+            "domain": "pektin.club",
+            "subDomain": "recursor"
+        },
+        "ribston": {
+            "enabled": true
+        },
+        "opa": {
+            "enabled": false
         }
-    ],
+    },
     "nodes": [
         {
-            "name": "pektin",
             "main": true,
+            "name": "pektin",
             "ansible": {
-                "configType": "hetzner"
+                "configType": "hetzner",
+                "floatingIp": true,
+                "floatingLegacyIp": false,
+                "serverType": "cpx31"
             }
         },
         {
             "name": "pektin2",
             "ansible": {
-                "configType": "hetzner"
+                "configType": "hetzner",
+                "floatingIp": true,
+                "floatingLegacyIp": false,
+                "serverType": "cpx31"
+            },
+            "setup": {
+                "system": "ubuntu",
+                "root": {
+                    "disableSystemdResolved": true,
+                    "installDocker": true
+                },
+                "cloneRepo": true,
+                "setup": true,
+                "start": true
             }
         }
     ],
-    "certificates": {
+    "nameservers": [
+        { "subDomain": "ns1", "domain": "pektin.club", "node": "pektin", "main": true },
+        { "subDomain": "ns2", "domain": "pektin.club", "node": "pektin2" }
+    ],
+    "letsencrypt": {
         "enabled": true,
-        "letsencryptEmail": "letsencrypt@pektin.xyz"
+        "letsencryptEmail": "test@pektin.club"
     },
-    "reverseProxy": {
-        "createTraefik": true,
-        "applyTraefikConfig": true
-    },
-    "registrarApi": {
-        "enabled": false
-    },
+    "usePolicies": "ribston",
     "build": {
         "server": {
             "enabled": false,
@@ -70,11 +77,45 @@
         "ui": {
             "enabled": false,
             "path": "/home/paul/Documents/pektin/pektin-ui"
+        },
+        "ribston": {
+            "enabled": false,
+            "path": "/home/paul/Documents/pektin/ribston"
+        },
+        "recursor": {
+            "enabled": false,
+            "path": ""
+        },
+        "vault": {
+            "enabled": false,
+            "path": ""
         }
     },
-    "devmode": {
-        "enabled": false,
-        "type": "local"
+    "reverseProxy": {
+        "createTraefik": true,
+        "routing": "domain",
+        "tls": false,
+        "tempZone": { "enabled": true, "provider": "pektin.zone", "routing": "local" },
+        "traefikUi": { "enabled": true, "domain": "pektin.club", "subDomain": "traefik" },
+        "external": {
+            "domain": "pektin.club",
+            "subDomain": "pektin-proxy",
+            "enabled": true,
+            "services": [
+                {
+                    "name": "gandi",
+                    "enabled": true,
+                    "domain": "api.gandi.net",
+                    "accessControlAllowMethods": ["OPTIONS", "POST", "GET", "DELETE"]
+                },
+                {
+                    "name": "crt",
+                    "enabled": true,
+                    "domain": "crt.sh",
+                    "accessControlAllowMethods": ["OPTIONS", "GET"]
+                }
+            ]
+        }
     },
     "ansible": {
         "sshPubKeyName": "paul@blackbox"

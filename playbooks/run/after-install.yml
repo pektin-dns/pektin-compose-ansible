@@ -1,0 +1,29 @@
+- name: run pektin
+  hosts: hcloud_labels_group_main
+  remote_user: root
+  vars:
+      ansible_ssh_private_key_file: /ansible/keys/pektin
+      ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
+  tasks:
+      - name: chmod the arbeiter and floating ip files
+        shell: "find ~/pektin-compose/ansible/ -type f -exec chmod 0644 {} \\; && find ~/pektin-compose/arbeiter/ -type f -exec chmod 0644 {} \\; && find ~/pektin-compose/ansible/ -type d -exec chmod 0755 {} \\; && find ~/pektin-compose/arbeiter/ -type d -exec chmod 0755 {} \\;"
+      - name: copy back floating ip scripts
+        synchronize:
+            mode: pull
+            src: ~/pektin-compose/ansible/.tmp/floating-ips/configure-scripts/
+            dest: ../../.tmp/floating-ips/configure-scripts/
+            owner: false
+            perms: false
+            recursive: true
+      - name: copy arbeiter config
+        synchronize:
+            mode: pull
+            src: ~/pektin-compose/arbeiter/
+            dest: ../../.tmp/arbeiter/
+            owner: false
+            perms: false
+            recursive: true
+      - name: chmod the arbeiter and floating ip files
+        shell: "find ~/pektin-compose/ansible/ -type f -exec chmod 0600 {} \\; && find ~/pektin-compose/arbeiter/ -type f -exec chmod 0600 {} \\; && find ~/pektin-compose/ansible/ -type d -exec chmod 0700 {} \\; && find ~/pektin-compose/arbeiter/ -type d -exec chmod 0700 {} \\;"
+      - name: run configure floating ips script
+        shell: "bash ~/pektin-compose/ansible/.tmp/floating-ips/configure-scripts/{{ansible_facts['hostname']}}-configure-floating-ips.sh"

@@ -6,7 +6,7 @@
       ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
   tasks:
       - name: run delete script
-        shell: bash ~/pektin-compose/reset.sh || true
+        shell: cd ~/pektin-compose/ && bash reset.sh || true
       - name: delete old files
         file:
             path: ~/pektin-compose/
@@ -16,6 +16,8 @@
             repo: https://git.y.gy/pektin/pektin-compose
             dest: ~/pektin-compose/
             force: true
+      - name: run delete script
+        shell: cd ~/pektin-compose/ && bash reset.sh || true
       - name: stop systemd-resolved
         shell: systemctl disable --now systemd-resolved
       - name: insert nameserver
@@ -30,5 +32,7 @@
             dest: ~/pektin-compose/ansible/.tmp/
       - name: copy hcloud specific index.js
         copy:
-            src: ../files/index.js
-            dest: ~/pektin-compose/scripts/check-config/
+            src: ../files/
+            dest: ~/files/
+      - name: run preinstall for ansible hetzner setup
+        shell: cd ~/files/preinstall/ && bash node-instant.sh
