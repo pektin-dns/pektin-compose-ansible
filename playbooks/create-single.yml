@@ -4,7 +4,7 @@
       api_token: "{{ token }}"
       name: "{{ item.name }}"
       server_type: "{{ item.ansible.serverType | default('cx11') }}"
-      image: ubuntu-20.04
+      image: ubuntu-22.04
       labels:
           project: "pektin"
           group: "{{ 'main' if item.main is defined and item.main==true else 'sub' }}"

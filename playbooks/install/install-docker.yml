@@ -35,13 +35,9 @@
                       - docker-ce
                       - docker-ce-cli
                       - containerd.io
+                      - docker-compose-plugin
             - name: start and enable docker service
               service:
                   name: docker
                   state: started
                   enabled: true
-            - name: install docker compose
-              get_url:
-                  url: "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-{{ ansible_facts['system'] }}-{{ ansible_facts['userspace_architecture'] }}"
-                  dest: /usr/local/bin/docker-compose
-                  mode: +x

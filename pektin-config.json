@@ -99,8 +99,17 @@
         }
     ],
     "nameservers": [
-        { "subDomain": "ns1", "domain": "pektin.club", "node": "pektin", "main": true },
-        { "subDomain": "ns2", "domain": "pektin.club", "node": "pektin2" }
+        {
+            "subDomain": "max",
+            "domain": "pektin.club",
+            "node": "pektin",
+            "main": true
+        },
+        {
+            "subDomain": "paul",
+            "domain": "pektin.club",
+            "node": "pektin2"
+        }
     ],
     "letsencrypt": {
         "enabled": true,
@@ -112,8 +121,16 @@
         "createTraefik": true,
         "routing": "domain",
         "tls": false,
-        "tempZone": { "enabled": true, "provider": "pektin.zone", "routing": "local" },
-        "traefikUi": { "enabled": true, "domain": "pektin.club", "subDomain": "traefik" },
+        "tempZone": {
+            "enabled": true,
+            "provider": "pektin.zone",
+            "routing": "local"
+        },
+        "traefikUi": {
+            "enabled": true,
+            "domain": "pektin.club",
+            "subDomain": "traefik"
+        },
         "external": {
             "domain": "pektin.club",
             "subDomain": "pektin-proxy",
