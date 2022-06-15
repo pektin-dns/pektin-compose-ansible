@@ -2,7 +2,7 @@
     "services": {
         "server": {
             "enabled": true,
-            "logging": "main,pektin_server",
+            "logging": "main,pektin_server,pektin_common",
             "build": {
                 "enabled": false,
                 "path": "/home/paul/Documents/pektin/pektin-server",
@@ -22,7 +22,7 @@
         "api": {
             "domain": "pektin.club",
             "subDomain": "api",
-            "logging": "main,pektin_api",
+            "logging": "main,pektin_api,pektin_common",
             "perimeterAuth": false,
             "build": {
                 "enabled": false,
@@ -60,6 +60,40 @@
         },
         "opa": {
             "enabled": false,
+            "build": {
+                "enabled": false,
+                "path": "",
+                "dockerfile": "Dockerfile"
+            }
+        },
+        "jaeger": {
+            "enabled": true,
+            "build": {
+                "enabled": false,
+                "path": "",
+                "dockerfile": "Dockerfile"
+            }
+        },
+        "prometheus": {
+            "enabled": true,
+            "build": {
+                "enabled": false,
+                "path": "",
+                "dockerfile": "Dockerfile"
+            }
+        },
+        "grafana": {
+            "enabled": true,
+            "domain": "pektin.club",
+            "subDomain": "grafana",
+            "build": {
+                "enabled": false,
+                "path": "",
+                "dockerfile": "Dockerfile"
+            }
+        },
+        "alert": {
+            "enabled": true,
             "build": {
                 "enabled": false,
                 "path": "",
@@ -116,7 +150,6 @@
         "letsencryptEmail": "test@pektin.club"
     },
     "usePolicies": "ribston",
-
     "reverseProxy": {
         "createTraefik": true,
         "routing": "domain",
@@ -135,6 +168,11 @@
             "domain": "pektin.club",
             "subDomain": "pektin-proxy",
             "enabled": true,
+            "build": {
+                "enabled": false,
+                "path": "/home/paul/Documents/pektin/proxy-auth/",
+                "dockerfile": "Dockerfile"
+            },
             "services": [
                 {
                     "name": "gandi",
