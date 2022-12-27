@@ -16,6 +16,8 @@
             repo: https://git.y.gy/pektin/pektin-compose
             dest: ~/pektin-compose/
             force: true
+      - name: install docker
+        shell: cd ~/pektin-compose/scripts/systems/ubuntu/ && bash install-docker.sh
       - name: run delete script
         shell: cd ~/pektin-compose/ && bash reset.sh || true
       - name: stop systemd-resolved

@@ -6,12 +6,12 @@
             "build": {
                 "enabled": false,
                 "path": "/home/paul/Documents/pektin/pektin-server",
-                "dockerfile": "dev.Dockerfile"
+                "dockerfile": "Dockerfile"
             }
         },
         "ui": {
             "enabled": true,
-            "domain": "pektin.club",
+            "domain": "pektin.io.",
             "subDomain": "ui",
             "build": {
                 "enabled": false,
@@ -20,18 +20,18 @@
             }
         },
         "api": {
-            "domain": "pektin.club",
+            "domain": "pektin.io.",
             "subDomain": "api",
             "logging": "main,pektin_api,pektin_common",
             "perimeterAuth": false,
             "build": {
                 "enabled": false,
                 "path": "/home/paul/Documents/pektin/pektin-api",
-                "dockerfile": "dev.Dockerfile"
+                "dockerfile": "Dockerfile"
             }
         },
         "vault": {
-            "domain": "pektin.club",
+            "domain": "pektin.io.",
             "subDomain": "vault",
             "perimeterAuth": false,
             "build": {
@@ -40,9 +40,63 @@
                 "dockerfile": "Dockerfile"
             }
         },
+        "verkehr": {
+            "enabled": true,
+            "build": {
+                "enabled": false,
+                "path": "/home/paul/Documents/pektin/pektin-verkehr",
+                "dockerfile": "Dockerfile"
+            },
+            "routing": "domain",
+            "tls": true,
+            "tempZone": {
+                "enabled": false,
+                "provider": "pektin.zone",
+                "routing": "local"
+            },
+            "external": {
+                "domain": "pektin.io.",
+                "subDomain": "pektin-proxy",
+                "enabled": true,
+                "services": [
+                    {
+                        "name": "gandi",
+                        "enabled": true,
+                        "domain": "api.gandi.net",
+                        "accessControlAllowMethods": ["OPTIONS", "POST", "GET", "DELETE", "PUT"],
+                        "accessControlAllowHeaders": ["Content-Type", "Authorization"]
+                    },
+                    {
+                        "name": "crt",
+                        "enabled": true,
+                        "domain": "crt.sh",
+                        "accessControlAllowMethods": ["OPTIONS", "GET"],
+                        "accessControlAllowHeaders": []
+                    },
+                    {
+                        "name": "mx.y.gy",
+                        "enabled": true,
+                        "domain": "mx.y.gy",
+                        "accessControlAllowMethods": ["OPTIONS", "GET", "POST", "PUT", "DELETE"],
+                        "accessControlAllowHeaders": ["Content-Type", "X-Api-Key"]
+                    }
+                ]
+            }
+        },
+        "zertificat": {
+            "enabled": true,
+            "build": {
+                "enabled": false,
+                "path": "/home/paul/Documents/pektin/pektin-zertificat",
+                "dockerfile": "dev.Dockerfile"
+            },
+            "acmeEmail": "letsencrypt@y.gy",
+            "acmeEndpoint": "https://acme-staging-v02.api.letsencrypt.org/directory",
+            "usePebble": true
+        },
         "tnt": {
             "enabled": true,
-            "domain": "pektin.club",
+            "domain": "pektin.io.",
             "subDomain": "tnt",
             "build": {
                 "enabled": false,
@@ -84,7 +138,7 @@
         },
         "grafana": {
             "enabled": true,
-            "domain": "pektin.club",
+            "domain": "pektin.io.",
             "subDomain": "grafana",
             "build": {
                 "enabled": false,
@@ -93,7 +147,7 @@
             }
         },
         "alert": {
-            "enabled": true,
+            "enabled": false,
             "build": {
                 "enabled": false,
                 "path": "",
@@ -119,76 +173,23 @@
                 "floatingIp": false,
                 "floatingLegacyIp": false,
                 "serverType": "cpx31"
-            },
-            "setup": {
-                "system": "ubuntu",
-                "root": {
-                    "disableSystemdResolved": true,
-                    "installDocker": true
-                },
-                "cloneRepo": true,
-                "setup": true,
-                "start": true
             }
         }
     ],
     "nameservers": [
         {
-            "subDomain": "max",
-            "domain": "pektin.club",
+            "subDomain": "ns1",
+            "domain": "pektin.io.",
             "node": "pektin",
             "main": true
         },
         {
-            "subDomain": "paul",
-            "domain": "pektin.club",
+            "subDomain": "ns2",
+            "domain": "pektin.io.",
             "node": "pektin2"
         }
     ],
-    "letsencrypt": {
-        "enabled": true,
-        "letsencryptEmail": "test@pektin.club"
-    },
     "usePolicies": "ribston",
-    "reverseProxy": {
-        "createTraefik": true,
-        "routing": "domain",
-        "tls": false,
-        "tempZone": {
-            "enabled": true,
-            "provider": "pektin.zone",
-            "routing": "local"
-        },
-        "traefikUi": {
-            "enabled": true,
-            "domain": "pektin.club",
-            "subDomain": "traefik"
-        },
-        "external": {
-            "domain": "pektin.club",
-            "subDomain": "pektin-proxy",
-            "enabled": true,
-            "build": {
-                "enabled": false,
-                "path": "/home/paul/Documents/pektin/proxy-auth/",
-                "dockerfile": "Dockerfile"
-            },
-            "services": [
-                {
-                    "name": "gandi",
-                    "enabled": true,
-                    "domain": "api.gandi.net",
-                    "accessControlAllowMethods": ["OPTIONS", "POST", "GET", "DELETE"]
-                },
-                {
-                    "name": "crt",
-                    "enabled": true,
-                    "domain": "crt.sh",
-                    "accessControlAllowMethods": ["OPTIONS", "GET"]
-                }
-            ]
-        }
-    },
     "ansible": {
         "sshPubKeyName": "paul@blackbox"
     }
